@@ -1,0 +1,133 @@
+.containerButtonActive-Select{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.title-Select{
+    margin-right: 10px;
+}
+
+
+
+
+.modal-Select{
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    top:0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: auto;
+    background-color: rgba(0,0,0,.4);
+    opacity: 0.9;
+    transition: opacity .3s;
+    display: flex;
+    z-index: 10000;
+    /* pointer-events: none; */
+}   
+
+.container1-Select{
+    background-color: #fff;
+    width: 40%;
+    height:auto;
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+}
+.container-items-Select{
+    max-height: 70vh;
+    height:auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.container-Select{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selectTouch-Select{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    transition: .3s;
+
+}
+.selectTouch-Select:hover{
+    border-radius: 5px;
+    background-color: #1a6b91;
+    color: #fff;
+}
+.selectTextOne-Select{
+    font-weight: bold;
+}
+
+.container-Select{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+}
+.buttonBack-Select{
+    border: none;
+    background-color: transparent;
+    margin-right: -6%;
+    z-index: 10;
+}
+.titleCategorias-Select{
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+
+}
+.selectContainer-Select{
+    background-color: transparent;
+    border:none;
+    width: 50%;
+    border-top-style: solid;
+    border-color: black;
+    border-width: 1px;
+
+}
+
+.selectText-Select{
+    color: black;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.selectText-Select:hover{
+    color: #1a6b91;
+    font-weight: bold;
+    
+}
+.selectTextColor-Select{
+    color:white;
+}
+@media screen and (max-width: 900px) {
+    .selectTextOne-Select{
+        font-weight: bold;
+        font-size: 12px;
+    }
+    .container-CategoriesSelect{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 700px) {
+    .container1-Select{
+        width: 90%;
+    }
+
+}

@@ -1,0 +1,36 @@
+.swal-button {
+    padding: 7px 19px;
+    border-radius: 4px;
+    background-color: #0a234be7;
+    /* background-color: #c734b6; */
+    font-size: 12px;
+    border: 1px solid #0a234be7;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+    color:white;
+}
+.swal-text {
+    padding: 17px;
+    display: block;
+    margin: 22px;
+    text-align: center;
+    color: black;
+    font-weight: 400;
+    font-size: 1.3rem;
+    line-height: 1.9rem;
+    letter-spacing: 0.5px;
+}
+.swal-title {
+    margin: 0px;
+    font-size: 22px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+    margin-bottom: 28px;
+    color: black;
+    font-weight: 600;
+    font-size: 1.7rem;
+    line-height: 2.5rem;
+
+}
+.swal-modal {
+    /* background-color: rgba(63,255,106,0.69); */
+    border: 3px solid white;
+}

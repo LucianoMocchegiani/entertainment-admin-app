@@ -1,23 +1,26 @@
 "use client"
-import ReactPlayer from 'react-player'
-import { useState, useEffect } from 'react'
+import { useState, useEffect} from "react";
+import MovieDetail from '@/components/movies/MovieDetail'
 
+ 
 
-export default function App() {
+export default function MovieIdPage() {
   const [isClient, setIsClient] = useState(false)
  
   useEffect(() => {
-    setIsClient(true)
+    setIsClient(true) 
   }, [])
- 
+
   return (
-    <>{isClient ?
+    <> 
+    {isClient ?
     <main className="flex min-h-screen flex-col items-center justify-between bg-white">
-      
+
      {/* <ReactPlayer 
       url='https://www.youtube.com/watch?v=_w4sPyiNdBY'
       controls
      />  */}
-    </main>: null}</>
+     <MovieDetail/>
+    </main>:null}</>
   )
 }

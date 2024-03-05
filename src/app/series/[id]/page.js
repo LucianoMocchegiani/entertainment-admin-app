@@ -1,23 +1,24 @@
 "use client"
-import ReactPlayer from 'react-player'
-import { useState, useEffect } from 'react'
+import { useState, useEffect} from "react";
+import SerieDetail from '@/components/series/SerieDetail'
 
-
-export default function App() {
+export default function SerieIdPage() {
   const [isClient, setIsClient] = useState(false)
  
   useEffect(() => {
-    setIsClient(true)
+    setIsClient(true) 
   }, [])
- 
+
   return (
-    <>{isClient ?
+    <> 
+    {isClient ?
     <main className="flex min-h-screen flex-col items-center justify-between bg-white">
-      
+
      {/* <ReactPlayer 
       url='https://www.youtube.com/watch?v=_w4sPyiNdBY'
       controls
      />  */}
-    </main>: null}</>
+     <SerieDetail/>
+    </main>:null}</>
   )
 }
