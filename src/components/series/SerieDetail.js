@@ -1,8 +1,9 @@
 "use client"
 import { useParams } from "next/navigation";
 import { useState, useEffect} from "react";
-import {getSerieDetail} from '@/firebase/api/series'
+import {getSerieDetail, DeleteSerie} from '@/firebase/api/series'
 import FormSerie from "./FormSerie";
+import { alertConfirmation } from '@/components/reusables/alert'
 
 
 function SeasonCard({ season }) {
@@ -64,11 +65,16 @@ export default function SerieDetail() {
             })
         })
     },[id])
+    const  handleDelete = ()=>{
+        alertConfirmation('Quiere eliminar la serie?','Se eliminara el video del store',async()=>await DeleteSerie(id))
+    }
+    
     
     return (
         <>{formActive?<FormSerie setFormActive={()=>setFormActive(false)} data={state?state.data:null}/>:
         <div>
             <button onClick={()=>setFormActive(true)} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Actualizar serie</button>
+            <button onClick={()=>handleDelete()} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Eliminar Serie</button>
                 <h1 className="max-w-lg text-3xl font-semibold leading-relaxed text-gray-900 dark:text-white">{state.data?.name?state.data.name:null}</h1>
                 <div className='mb-2'></div>
                 <p className="max-w-lg text-lg font-semibold leading-relaxed text-gray-900 dark:text-white">ID serie: {id}</p>

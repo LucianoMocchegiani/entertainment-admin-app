@@ -1,7 +1,8 @@
 "use client"
 import { useParams } from "next/navigation";
 import { useState, useEffect} from "react";
-import {getMovieDetail} from '@/firebase/api/movies'
+import {getMovieDetail, DeleteMovie} from '@/firebase/api/movies'
+import { alertConfirmation } from '@/components/reusables/alert'
 import FormMovie from "./FormMovie";
 
 export default function MovieDetail() {
@@ -12,7 +13,6 @@ export default function MovieDetail() {
         data: null
     })
     const [formActive, setFormActive] = useState(false)
-
     const handleSetState = async ()=>{
         const {success, message, data} = await getMovieDetail(id)
         setState({
@@ -31,11 +31,15 @@ export default function MovieDetail() {
             })
         })
     },[id])
+    const  handleDelete = ()=>{
+        alertConfirmation('Quiere eliminar la pelicula?','Se eliminara el video del store',async()=>await DeleteMovie(id))
+    }
     
     return (
         <>{formActive?<FormMovie setFormActive={()=>setFormActive(false)} data={state?state.data:null}/>:
             <div>
                 <button onClick={()=>setFormActive(true)} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Actualizar pelicula</button>
+                <button onClick={()=>handleDelete()} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Eliminar pelicula</button>
                     <h1 className="max-w-lg text-3xl font-semibold leading-relaxed text-gray-900 dark:text-white">{state.data?.title?state.data.title:null}</h1>
                     <div className='mb-2'></div>
                     <p className="max-w-lg text-lg font-semibold leading-relaxed text-gray-900 dark:text-white">ID pelicula: {id}</p>

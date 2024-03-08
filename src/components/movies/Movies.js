@@ -13,12 +13,13 @@ function CardMovie({movie}){
     )
 }
 
-export default async function Movies() {
+export default function Movies() {
     const [render, setRender]=useState([])
     async function fetchDataOnScroll(){
+
         const options = {
             requestType:'generic', 
-            value:null,
+            value:null, 
             value2:null,
             scroll:true, 
             setState:setRender, 
@@ -35,7 +36,7 @@ export default async function Movies() {
             setState:setRender, 
             prevState:render,
         }
-        getMovies(options)
+        await getMovies(options)
     }
     useEffect(()=>{
         fetchData()
@@ -50,7 +51,7 @@ export default async function Movies() {
             // endMessage={<p>No hay peliculas</p>}
         >
             <div className="flex flex-wrap justify-center items-center">
-            {render.length?    
+            {render?.length?    
                 render.map((movie) =>
                     <CardMovie movie = {movie}/>)
                 :null

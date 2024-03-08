@@ -13,7 +13,7 @@ function CardSerie({serie}){
     )
 }
 
-export default async function Series() {
+export default function Series() {
     const [render, setRender]=useState([])
     async function fetchDataOnScroll(){
         const options = {

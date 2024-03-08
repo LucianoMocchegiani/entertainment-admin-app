@@ -1,5 +1,5 @@
 import { doc , getDoc, collection, getDocs, query, orderBy, where, limit, setDoc, deleteDoc, addDoc, getDocFromCache, getDocsFromCache, startAfter, Timestamp} from 'firebase/firestore';
-import { db, storage } from '../firebase';
+import { db } from '../firebase';
 import axios from 'axios'
 import algoliasearch from 'algoliasearch/lite'
 
@@ -14,8 +14,7 @@ export const searchMovies=  async (search)=>{
         }
         const patch = 'https://api.themoviedb.org/3/search/movie?api_key=70e07702fea1b3da15a2e2fee1d08057&language=es&query='+search
         const request = await axios.get(patch)
-        response = { success:true, message:'Peliculas encontradas', data: request.data.results};
-            
+        response = { success:true, message:'Peliculas encontradas', data: request.data.results};  
         return response
     } catch (error) {
         let response = { success:false, message:error.message };
@@ -83,7 +82,7 @@ export const getMovieDetail=  async (id)=>{
         response = { success:true, message:'Detalle de la pelicula', data: request.data};
         console.log(response)
         return response
-    } catch (error) {
+    } catch (error){
         let response = { success:false, message:error.message };
         console.log(response)
         return response
@@ -101,6 +100,7 @@ export const getMovies=  async (
     {
     //firebase
     let response
+    console.log(options)
     try {
         const{
             requestType, 
@@ -125,22 +125,22 @@ export const getMovies=  async (
         }
         const selectedCollection = collection(db, `movies`);
         const requestTypes = !scroll?{
-            generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21))),
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(24))),
             where:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21),where('category_id','==',value))),
             whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21),where('discount_codes', "array-contains", value))),
             whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21),where('category_id','==',value),where('discount_codes', "array-contains", value2)))
         }:{
             generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),startAfter(prevState[prevState.length-1].title),limit(12))),
-            where:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('category_id','==',value),startAfter(prevState[prevState.length-1].title),limit(12))),
-            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('discount_codes', "array-contains", value),startAfter(prevState[prevState.length-1].title),limit(12))),
-            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('category_id','==',value),where('discount_codes', "array-contains", value2),startAfter(prevState[prevState.length-1].title),limit(12)))
+            where:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('category_id','==',value),startAfter(prevState[prevState.length-1].title),limit(21))),
+            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('discount_codes', "array-contains", value),startAfter(prevState[prevState.length-1].title),limit(21))),
+            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('category_id','==',value),where('discount_codes', "array-contains", value2),startAfter(prevState[prevState.length-1].title),limit(21)))
         }
         const requestSnapshot = await requestTypes[requestType]()
         const requestData = requestSnapshot.docs.map((movie) => ({
           ...movie.data(),   
           id: movie.id,
         }));
-        response = { success:true, message:'Peliculas obtenidas', data: requestData};
+        response = { success:true, message:'Peliculas obtenidas', data: [...prevState,...requestData]};
         setState([...prevState,...requestData])
         console.log(response)
         return ([...prevState,...requestData])
@@ -177,6 +177,21 @@ export const putProduct= async(data)=>{
         const selectedDoc = doc(db, `movies/${id}`);
         setDoc(selectedDoc, data)
         response = { success:true, message:'Pelicula actualizada', data: request.data};
+        console.log(response)
+        return response
+    } catch (error) {
+        let response = { success:false, message:error.message };
+        console.log(response)
+        return response
+    }
+}
+export const DeleteMovie=  async (id)=>{
+    //Firebase
+    try { 
+        let response = { success:false, message:'Reintente nuevamente en unos momentos' };
+        const selectedDoc = doc(db, `movies/${id}`);
+        const resolved = await deleteDoc(selectedDoc)
+        response = { success:true, message:'Pelicula eliminada de firebase', data: resolved};
         console.log(response)
         return response
     } catch (error) {

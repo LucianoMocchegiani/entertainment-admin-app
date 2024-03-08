@@ -146,22 +146,22 @@ export const getSeries=  async (
         }
         const selectedCollection = collection(db, `series`);
         const requestTypes = !scroll?{
-            generic:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21))),
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(24))),
             where:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21),where('category_id','==',value))),
             whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21),where('discount_codes', "array-contains", value))),
             whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21),where('category_id','==',value),where('discount_codes', "array-contains", value2)))
         }:{
-            generic:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),startAfter(prevState[prevState.length-1].title),limit(12))),
-            where:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('category_id','==',value),startAfter(prevState[prevState.length-1].title),limit(12))),
-            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('discount_codes', "array-contains", value),startAfter(prevState[prevState.length-1].title),limit(12))),
-            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('category_id','==',value),where('discount_codes', "array-contains", value2),startAfter(prevState[prevState.length-1].title),limit(12)))
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),startAfter(prevState[prevState.length-1].name),limit(12))),
+            where:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('category_id','==',value),startAfter(prevState[prevState.length-1].name),limit(12))),
+            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('discount_codes', "array-contains", value),startAfter(prevState[prevState.length-1].name),limit(12))),
+            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('category_id','==',value),where('discount_codes', "array-contains", value2),startAfter(prevState[prevState.length-1].name),limit(12)))
         }
         const requestSnapshot = await requestTypes[requestType]()
         const requestData = requestSnapshot.docs.map((serie) => ({
           ...serie.data(),   
           id:serie.id,
         }));
-        response = { success:true, message:'Series obtenidas', data: requestData};
+        response = { success:true, message:'Series obtenidas', data: [...prevState,...requestData]};
         setState([...prevState,...requestData])
         console.log(response)
         return ([...prevState,...requestData])
@@ -189,4 +189,19 @@ export const postSerie=  async (data)=>{
     }
 }
 
+export const DeleteSerie=  async (id)=>{
+    //Firebase
+    try { 
+        let response = { success:false, message:'Reintente nuevamente en unos momentos' };
+        const selectedDoc = doc(db, `series/${id}`);
+        const resolved = await deleteDoc(selectedDoc)
+        response = { success:true, message:'Serie eliminada de firebase', data: resolved};
+        console.log(response)
+        return response
+    } catch (error) {
+        let response = { success:false, message:error.message };
+        console.log(response)
+        return response
+    }
+}
 

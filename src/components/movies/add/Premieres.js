@@ -28,6 +28,9 @@ export default  function Movies() {
     useEffect(()=>{
         fetchData()
     },[])
+    useEffect(()=>{
+        console.log(render.length)
+    },[render])
     return (
         <> 
             <InfiniteScroll
