@@ -4,6 +4,7 @@ import { useState, useEffect} from "react";
 import {getMovieDetail, DeleteMovie} from '@/firebase/api/movies'
 import { alertConfirmation } from '@/components/reusables/alert'
 import FormMovie from "./FormMovie";
+import { useRouter } from "next/navigation";
 
 export default function MovieDetail() {
     const {id} = useParams()
@@ -12,6 +13,7 @@ export default function MovieDetail() {
         message: null,
         data: null
     })
+    const router = useRouter()
     const [formActive, setFormActive] = useState(false)
     const handleSetState = async ()=>{
         const {success, message, data} = await getMovieDetail(id)
@@ -32,7 +34,10 @@ export default function MovieDetail() {
         })
     },[id])
     const  handleDelete = ()=>{
-        alertConfirmation('Quiere eliminar la pelicula?','Se eliminara el video del store',async()=>await DeleteMovie(id))
+        alertConfirmation('Quiere eliminar la pelicula?','Se eliminara el video del store',async()=>{
+            router.push('/movies')
+            return await DeleteMovie(id)
+        })
     }
     
     return (

@@ -4,7 +4,7 @@ import { useState, useEffect} from "react";
 import {getSerieDetail, DeleteSerie} from '@/firebase/api/series'
 import FormSerie from "./FormSerie";
 import { alertConfirmation } from '@/components/reusables/alert'
-
+import { useRouter } from "next/navigation";
 
 function SeasonCard({ season }) {
     const {name, poster_path, season_number, overview} = season
@@ -46,7 +46,7 @@ export default function SerieDetail() {
         data: null
     })
     const [formActive, setFormActive] = useState(false)
-
+    const router = useRouter()
     const handleSetState = async ()=>{
         const {success, message, data} = await getSerieDetail(id)
         setState({
@@ -66,7 +66,10 @@ export default function SerieDetail() {
         })
     },[id])
     const  handleDelete = ()=>{
-        alertConfirmation('Quiere eliminar la serie?','Se eliminara el video del store',async()=>await DeleteSerie(id))
+        alertConfirmation('Quiere eliminar la serie?','Se eliminara el video del store',async()=>{
+            router.push('/series')
+            return await DeleteSerie(id)
+        })
     }
     
     

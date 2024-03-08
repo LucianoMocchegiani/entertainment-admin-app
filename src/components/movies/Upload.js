@@ -4,6 +4,7 @@ import { mdiUploadBox } from '@mdi/js';
 import { uploadFirebase } from '@/firebase/api/upload'
 import { ProgressBar } from "../reusables/ProgressBar";
 
+
 const UploadFile = ({id}) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [state, setState]= useState({
