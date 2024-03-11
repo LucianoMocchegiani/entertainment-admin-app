@@ -31,9 +31,9 @@ export default function FormSerie({setFormActive, data}){
     )
     const router = useRouter()
     const handleSubmit = ()=>{
-        alertConfirmation('Agregar Serie?', 'Agregara la serie a la base de datos', ()=>{
+        alertConfirmation('Actualizar Serie?', 'Guardara los cambios realizados.', ()=>{
             router.push('/series')
-            return postSerie(serie)
+            // return postSerie(serie)
         })
     }
     const handleSubmitVideo= ()=>{

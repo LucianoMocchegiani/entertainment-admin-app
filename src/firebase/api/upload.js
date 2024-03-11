@@ -1,9 +1,8 @@
 import { ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from '../firebase';
 
-
 export class UploadFile {
-  constructor(file, id, patch){
+  constructor( file, id, patch ){
     this.file = file
     this.id = id
     this.path = patch
@@ -11,16 +10,15 @@ export class UploadFile {
     this.metadata = {
       contentType: file.type
     };
-    this.uploadTask = uploadBytesResumable(storageRef, file, metadata);
-    this.status=null
-    this.progress=0 
+    this.uploadTask = uploadBytesResumable(this.storageRef,this.file,this.metadata);
+    this.status = null
+    this.progress = 0 
   }
   on(){
     this.uploadTask.on('state_changed',
     (snapshot) => {
       this.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       console.log({status:this.status, progress:this.progress})
-      console.log('Upload is ' + progress + '% done');
       switch (snapshot.state) {
         case 'paused':
           this.status='paused'

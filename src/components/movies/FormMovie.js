@@ -34,9 +34,9 @@ export default function FormMovie({setFormActive, data}){
     )
     const router = useRouter()
     const handleSubmit = ()=>{
-        alertConfirmation('Agregar pelicula?', 'Agregara la pelicula a la base de datos', ()=>{
+        alertConfirmation('Actualizar pelicula?', 'Guardara los cambios realizados.', ()=>{
             router.push('/movies')
-            return postMovie(movie)
+            // return postMovie(movie)
         })
     }
     const handleSubmitVideo= ()=>{

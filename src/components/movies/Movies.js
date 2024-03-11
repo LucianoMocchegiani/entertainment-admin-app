@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useState, useEffect} from "react";
 import { getMovies } from '@/firebase/api/movies' 
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Filters from './Filters'
 
 function CardMovie({movie}){
     return(
@@ -14,9 +15,9 @@ function CardMovie({movie}){
 }
 
 export default function Movies() {
-    const [render, setRender]=useState([])
+    const [render, setRender]= useState([])
+    const [filter, setFilter]= useState({})
     async function fetchDataOnScroll(){
-
         const options = {
             requestType:'generic', 
             value:null, 
@@ -43,6 +44,7 @@ export default function Movies() {
     },[])
     return (
         <>
+        <Filters/>
         <InfiniteScroll
             dataLength={render.length}
             next={fetchDataOnScroll}

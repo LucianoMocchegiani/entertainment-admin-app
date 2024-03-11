@@ -58,6 +58,18 @@ export  function alertInformation(title,text,title2,text2){
         }
     })
 }
+export  function alertBasic(title,text){
+    swal({
+        title:title,
+        text:text,
+        icon:'error',
+        buttons:["Cancel","Ok"],
+        timer: "4000",
+    })
+    .then(res=>{
+       return
+    })
+}
 export  function  alertForm(title, text, checkOk, placeholder="Write the name of your company"){
     swal({
         title:title,

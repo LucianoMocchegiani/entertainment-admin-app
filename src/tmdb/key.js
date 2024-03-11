@@ -34,5 +34,7 @@
 //proximos estrenos 
 // https://api.themoviedb.org /3/tv/on_the_air
 
+//https://api.themoviedb.org/3/tv/{series_id}/season/{season_number}/episode/{episode_number}
+
 // ejemeploGET: https://api.themoviedb.org/3/movie/now_playing?api_key=70e07702fea1b3da15a2e2fee1d08057&language=es&page=1
 // https://api.themoviedb.org/3/search/movie?api_key=70e07702fea1b3da15a2e2fee1d08057&language=es&query=harry%20poter%20y%20la%20piedra%20filosofal
