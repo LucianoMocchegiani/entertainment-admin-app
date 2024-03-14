@@ -91,11 +91,13 @@ export const getMovieDetail=  async (id)=>{
 export const getMovies=  async (
     options = {
         requestType:'generic', 
-        value:null,
-        value2:null,
+        platform:null,
+        genre:null,
+        label:null,
         scroll:false, 
         setState:(e)=>console.log(e), 
         prevState:[],
+        videoExist:null
     })=>
     {
     //firebase
@@ -104,37 +106,71 @@ export const getMovies=  async (
     try {
         const{
             requestType, 
-            value,
-            value2,
+            platform,
+            genre,
+            label,
             scroll, 
             setState, 
             prevState,
+            videoExist,
         }= options
         if(requestType!=='generic'&&requestType!=='where'&&requestType!=='whereArray'&&requestType!=='whereArrayWhere'){
             response = { success:false, message:'Error de requestTypes en getMovies' };
             console.log(response)
             return response
-        }else if(requestType==='whereArrayWhere'&& (!value ||!value2)){
+        }else if(requestType==='genres'&& !genre){
             response = { success:false, message:'Error de requestTypes en getMovies, faltan valores' };
             console.log(response)
             return response
-        }else if(requestType!=='generic'){
+        }else if(requestType==='platforms'&& !platform){
+            response = { success:false, message:'Error de requestTypes en getMovies, faltan valores' };
+            console.log(response)
+            return response
+        }else if(requestType==='genres'&& !genre){
             response = { success:false, message:'Error de requestTypes en getMovies, faltan valores' };
             console.log(response)
             return response
         }
+        // }else if(requestType!=='generic'){
+        //     response = { success:false, message:'Error de requestTypes en getMovies, faltan valores' };
+        //     console.log(response)
+        //     return response
+        // }
         const selectedCollection = collection(db, `movies`);
-        const requestTypes = !scroll?{
+        const video = (!videoExist?null:videoExist=='sin video'?"==":videoExist=='con video'?"!=":null)
+        const requestTypes = !scroll&&video?{
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('firestore_url_video', video, ""),limit(24))),
+            genres:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),where('firestore_url_video', video, ""),limit(24))),
+            platforms:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),where('firestore_url_video', video, ""),limit(24))),
+            labels:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('labels', "array-contains", label),where('firestore_url_video', video, ""),limit(24))),
+            platformAndGenres: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),where('genres', "array-contains", genre),where('firestore_url_video', video, ""),limit(24))),
+            platformAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('plarform', "array-contains", platform),where('labels', "array-contains", label),where('firestore_url_video', video, ""),limit(24))),
+            genresAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),where('labels', "array-contains", label),where('firestore_url_video', video, ""),limit(24))),
+        }:!scroll&&!video?{
             generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(24))),
-            where:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21),where('category_id','==',value))),
-            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21),where('discount_codes', "array-contains", value))),
-            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),limit(21),where('category_id','==',value),where('discount_codes', "array-contains", value2)))
-        }:{
+            genres:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),limit(24))),
+            platforms:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),limit(24))),
+            labels:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('labels', "array-contains", label),limit(24))),
+            platformAndGenres: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),where('genres', "array-contains", genre),limit(24))),
+            platformAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('plarform', "array-contains", platform),where('labels', "array-contains",label),limit(24))),
+            genresAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),where('labels', "array-contains", label),limit(24))),
+        }:scroll&&!video?{
             generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),startAfter(prevState[prevState.length-1].title),limit(12))),
-            where:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('category_id','==',value),startAfter(prevState[prevState.length-1].title),limit(21))),
-            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('discount_codes', "array-contains", value),startAfter(prevState[prevState.length-1].title),limit(21))),
-            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('category_id','==',value),where('discount_codes', "array-contains", value2),startAfter(prevState[prevState.length-1].title),limit(21)))
-        }
+            genres:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),startAfter(prevState[prevState.length-1].title),limit(21))),
+            platforms:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),startAfter(prevState[prevState.length-1].title),limit(21))),
+            labels:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('labels', "array-contains", label),startAfter(prevState[prevState.length-1].title),limit(21))),
+            platformAndGenres: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),where('genres', "array-contains", genre),startAfter(prevState[prevState.length-1].title),limit(21))),
+            platformAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('plarform', "array-contains", platform),where('labels', "array-contains", label),startAfter(prevState[prevState.length-1].title),limit(21))),
+            genresAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),where('labels', "array-contains", label),startAfter(prevState[prevState.length-1].title),limit(21))),
+        }:scroll&&video?{
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(12))),
+            genres:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(21))),
+            platforms:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(21))),
+            labels:async ()=> await getDocs(query(selectedCollection, orderBy("title",'asc'),where('labels', "array-contains", label),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(21))),
+            platformAndGenres: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('platform', "array-contains", platform),where('genres', "array-contains", genre),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(21))),
+            platformAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('plarform', "array-contains", platform),where('labels', "array-contains", label),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(21))),
+            genresAndLabels: async ()=>  await getDocs(query(selectedCollection, orderBy("title",'asc'),where('genres', "array-contains", genre),where('labels', "array-contains", label),where('firestore_url_video', video, ""),startAfter(prevState[prevState.length-1].title),limit(21))),
+        }:null
         const requestSnapshot = await requestTypes[requestType]()
         const requestData = requestSnapshot.docs.map((movie) => ({
           ...movie.data(),   

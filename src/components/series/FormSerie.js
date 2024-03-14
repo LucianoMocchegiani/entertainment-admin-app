@@ -32,8 +32,9 @@ export default function FormSerie({setFormActive, data}){
     const router = useRouter()
     const handleSubmit = ()=>{
         alertConfirmation('Actualizar Serie?', 'Guardara los cambios realizados.', ()=>{
-            router.push('/series')
+            // router.back()
             // return postSerie(serie)
+            return{success: false, message:'Funcion desabilitada'}
         })
     }
     const handleSubmitVideo= ()=>{

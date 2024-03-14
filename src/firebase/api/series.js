@@ -69,27 +69,6 @@ export const searchSeriesAlgolia = async (search) =>{
     }
 }
 
-export const getSerieEpisode = async (options)=>{
-    //api
-    try {
-        const {id, season, episode} = options
-        let response = { success:false, message:'Reintente nuevamente en unos momentos' };
-        if(typeof Number(id) !== 'number'){
-            response = { success:false, message:'The value is not valid' };
-            console.log(response);
-            return response;
-        }
-        const patch = 'https://api.themoviedb.org/3/tv/'+Number(id)+'/season/'+Number(season)+'/episode/'+Number(episode)+'?api_key=70e07702fea1b3da15a2e2fee1d08057&language=es'
-        const request = await axios.get(patch)
-        response = { success:true, message:'capitulo'+Number(episode)+' de la temporada'+Number(season)+'obtenido', data: request.data};
-        console.log(response)
-        return response
-    } catch (error) {
-        let response = { success:false, message:error.message };
-        console.log(response)
-        return response
-    }
-}
 export const getSerieDetail=  async (id)=>{
     //api
     try {
@@ -110,6 +89,7 @@ export const getSerieDetail=  async (id)=>{
         return response
     }
 }
+
 export const getSeries=  async (
     options = {
         requestType:'generic', 

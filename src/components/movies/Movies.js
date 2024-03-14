@@ -16,12 +16,17 @@ function CardMovie({movie}){
 
 export default function Movies() {
     const [render, setRender]= useState([])
-    const [filter, setFilter]= useState({})
+    const [platform, setPlatform]=useState({id:'ninguna',name:'ninguna'})
+    const [genre, setGenre]=useState({id:'ninguna',name:'ninguna'})
+    const [label, setLabel]=useState({id:'ninguna',name:'ninguna'})
+    const [video, setVideo]=useState({id:'todas',name:'todas'})
     async function fetchDataOnScroll(){
         const options = {
             requestType:'generic', 
-            value:null, 
-            value2:null,
+            platform:platform,
+            genre:genre,
+            label:label,
+            video:video,
             scroll:true, 
             setState:setRender, 
             prevState:render,
@@ -31,8 +36,10 @@ export default function Movies() {
     async function fetchData(){
         const options = {
             requestType:'generic', 
-            value:null,
-            value2:null,
+            platform:platform,
+            genre:genre,
+            label:label,
+            video:video,
             scroll:false, 
             setState:setRender, 
             prevState:render,

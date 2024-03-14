@@ -6,21 +6,21 @@ import FormSerie from "./FormSerie";
 import { alertConfirmation } from '@/components/reusables/alert'
 import { useRouter } from "next/navigation";
 
-function SeasonCard({ season }) {
-    const {name, poster_path, season_number, overview} = season
-    const [isOpen, setIsOpen] = useState(false);
+
+function SeasonCard({ season, router, id}) {
+    const {name, season_number} = season
     return (
         <div className="relative text-left mt-4">
                 <button
-                    className="btnPrimary w-40"
+                    className="btnPrimary w-auto"
                     aria-haspopup="true"
-                    aria-expanded={isOpen}  // Reflect open state
+                    // aria-expanded={true}  // Reflect open state
                     id="dropdown-toggle-button"
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() =>  router.push(`/series/${id}/${season_number}`)}
                 >
-                    <p className={` text-white ${isOpen ?'bg-blue-500':'bg-blue-700'} font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-auto`}>{name}</p>
+                    <p className={` text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-auto`}>{name}</p>
                 </button>
-            <div
+            {/* <div
                 className={`origin-top-right left-0 mt-1 w-40  
                 ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0 hidden'}`}
                 role="menu"
@@ -32,7 +32,7 @@ function SeasonCard({ season }) {
                     <p className="max-w-lg text-lg font-semibold leading-relaxed text-gray-900 dark:text-white">{overview}</p>
                     <img src={poster_path?"https://image.tmdb.org/t/p/w500"+poster_path:null}/>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
@@ -97,7 +97,7 @@ export default function SerieDetail() {
                     <p className=" text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-auto">{state.data.seasons.length} Temporadas</p>
                     {
                         state.data.seasons.map((season)=>
-                        <SeasonCard season={season}/>)
+                        <SeasonCard season={season} router={router} id={id}/>)
                     }
                 </div>:null}
         </div>}
