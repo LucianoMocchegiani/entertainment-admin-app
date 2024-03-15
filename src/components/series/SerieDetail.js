@@ -6,37 +6,21 @@ import FormSerie from "./FormSerie";
 import { alertConfirmation } from '@/components/reusables/alert'
 import { useRouter } from "next/navigation";
 
-
-function SeasonCard({ season, router, id}) {
-    const {name, season_number} = season
+function SeasonCard({ season, router, serie}) {
+    const {name, season_number, id} = season
     return (
         <div className="relative text-left mt-4">
                 <button
                     className="btnPrimary w-auto"
                     aria-haspopup="true"
-                    // aria-expanded={true}  // Reflect open state
                     id="dropdown-toggle-button"
-                    onClick={() =>  router.push(`/series/${id}/${season_number}`)}
+                    onClick={() =>  router.push(`/series/${serie}/${season_number}?season_id=${id}`)}
                 >
                     <p className={` text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-auto`}>{name}</p>
                 </button>
-            {/* <div
-                className={`origin-top-right left-0 mt-1 w-40  
-                ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0 hidden'}`}
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="dropdown-toggle-button"
-            >
-                <div className="w-96">
-                    <div className='mb-2'></div>
-                    <p className="max-w-lg text-lg font-semibold leading-relaxed text-gray-900 dark:text-white">{overview}</p>
-                    <img src={poster_path?"https://image.tmdb.org/t/p/w500"+poster_path:null}/>
-                </div>
-            </div> */}
         </div>
     );
 };
-
 
 export default function SerieDetail() {
     const {id} = useParams()
@@ -72,7 +56,6 @@ export default function SerieDetail() {
         })
     }
     
-    
     return (
         <>{formActive?<FormSerie setFormActive={()=>setFormActive(false)} data={state?state.data:null}/>:
         <div>
@@ -97,7 +80,7 @@ export default function SerieDetail() {
                     <p className=" text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-auto">{state.data.seasons.length} Temporadas</p>
                     {
                         state.data.seasons.map((season)=>
-                        <SeasonCard season={season} router={router} id={id}/>)
+                        <SeasonCard season={season} router={router} serie={id}/>)
                     }
                 </div>:null}
         </div>}

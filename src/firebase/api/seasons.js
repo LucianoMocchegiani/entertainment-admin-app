@@ -57,3 +57,28 @@ export const DeleteSeason=  async (id)=>{
     }
 }
 
+export const getSeasonDetailFirebase=  async (id)=>{
+    //Firebase
+    try {
+        let response = { success:false, message:'Reintente nuevamente en unos momentos' };
+        if(typeof Number(id) !== 'number'){
+            response = { success:false, message:'Id value is not valid' };
+            console.log(response);
+            return response;
+        }
+        const selectedDoc = doc(db, 'seasons/'+id)
+        const requestSnapshot = await getDoc(selectedDoc)
+        if (requestSnapshot.exists()){
+            const seasonData = { ...requestSnapshot.data(), id: requestSnapshot.id };
+            response = { success:true, message:'Detalle de la temporada', data: seasonData};
+        }else{
+            response = { success:false, message:'No existe la temporada en la base de datos', data:null};
+        }
+        console.log(response)
+        return response
+    } catch (error) {
+        let response = { success:false, message:error.message };
+        console.log(response)
+        return response
+    }
+}

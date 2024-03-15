@@ -89,6 +89,31 @@ export const getSerieDetail=  async (id)=>{
         return response
     }
 }
+export const getSerieDetailFirebase=  async (id)=>{
+    //Firebase
+    try {
+        let response = { success:false, message:'Reintente nuevamente en unos momentos' };
+        if(typeof Number(id) !== 'number'){
+            response = { success:false, message:'Id value is not valid' };
+            console.log(response);
+            return response;
+        }
+        const selectedDoc = doc(db, 'series/'+id)
+        const requestSnapshot = await getDoc(selectedDoc)
+        if (requestSnapshot.exists()){
+            const serieData = { ...requestSnapshot.data(), id: requestSnapshot.id };
+            response = { success:true, message:'Detalle de la serie', data: serieData};
+        }else{
+            response = { success:false, message:'No existe la serie en la base de datos', data:null};
+        }
+        console.log(response)
+        return response
+    } catch (error) {
+        let response = { success:false, message:error.message };
+        console.log(response)
+        return response
+    }
+}
 
 export const getSeries=  async (
     options = {

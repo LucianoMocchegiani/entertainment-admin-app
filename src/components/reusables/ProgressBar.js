@@ -7,14 +7,14 @@ import { storage } from '../../firebase/firebase';
 
 let uploadTask = null
 
-export function ProgressBar({ id, file, setActive }){
+export function ProgressBar({ id, file, setActive, patch}){
     const[progress, setProgress] = useState(0)
     const[status, setStatus] = useState('running')
 
     useEffect(()=>{
         if(!uploadTask){
             const metadata = {contentType: file.type}
-            const patch = 'm-videos/'
+            patch = patch? patch :'m-videos/'
             const storageRef = ref(storage, patch + id)
             uploadTask = uploadBytesResumable(storageRef, file, metadata)
             uploadTask.on('state_changed', (snapshot) => {
