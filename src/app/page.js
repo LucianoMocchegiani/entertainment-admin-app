@@ -1,5 +1,6 @@
 "use client"
 import ReactPlayer from 'react-player'
+import FileUploader from '@/components/prueba/FileUploader'
 import { useState, useEffect } from 'react'
 
 
@@ -13,11 +14,6 @@ export default function App() {
   return (
     <>{isClient ?
     <main className="flex min-h-screen flex-col items-center justify-between bg-white">
-      
-     {/* <ReactPlayer 
-      url='https://www.youtube.com/watch?v=_w4sPyiNdBY'
-      controls
-     />  */}
     </main>: null}</>
   )
 }

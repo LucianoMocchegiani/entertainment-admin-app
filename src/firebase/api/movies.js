@@ -204,15 +204,15 @@ export const postMovie=  async (data)=>{
     }
 }
 
-export const putProduct= async(data)=>{
+export const putMovie= async(data)=>{
     //Firebase
     try { 
         let response = { success:false, message:'Reintente nuevamente en unos momentos' };
         const {id} = data
-        data = {...data , updated_date:Timestamp.now() }
+        data = {...data , updated_date:Timestamp.now()}
         const selectedDoc = doc(db, `movies/${id}`);
-        setDoc(selectedDoc, data)
-        response = { success:true, message:'Pelicula actualizada', data: request.data};
+        const resolved = await setDoc(selectedDoc, data)
+        response = { success:true, message:'Pelicula actualizada', data: resolved};
         console.log(response)
         return response
     } catch (error) {

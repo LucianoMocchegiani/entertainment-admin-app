@@ -33,7 +33,7 @@ export default function EpisodeDetail() {
     const handleSetStateApi = async ()=>{
         try{
             const {success, message, data} = await getEpisodeDetail(id, season, episode)
-            const postResponse = await postEpisode(data)
+            const postResponse = await postEpisode({...data, serie_id:id})
             if(postResponse.success && success){
                 const getResponse = await getEpisodeDetailFirebase(data.id)
                 setState({ 

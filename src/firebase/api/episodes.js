@@ -38,12 +38,35 @@ export const postEpisode=  async (data)=>{
             season_number: data.season_number,
             still_path: data.still_path,
             vote_average: data.vote_average, 
+            serie_id: Number(data.serie_id),
             updated_date: Timestamp.now(), 
             created_date: Timestamp.now()
         }
         const selectedDoc = doc(db, `episodes/${id}`);
         const resolved = await setDoc(selectedDoc, data)
         response = { success:true, message:'Capitulo cargado a firebase', data: resolved};
+        console.log(response)
+        return response
+    } catch (error) {
+        let response = { success:false, message:error.message };
+        console.log(response)
+        return response
+    }
+}
+
+export const putEpisode=  async (data)=>{
+    //Firebase
+    try { 
+        console.log(data)
+        let response = { success:false, message:'Reintente nuevamente en unos momentos' };
+        const {id} = data
+        data = {
+            ...data,
+            updated_date: Timestamp.now(), 
+        }
+        const selectedDoc = doc(db, `episodes/${id}`);
+        const resolved = await setDoc(selectedDoc, data)
+        response = { success:true, message:'Capitulo actualizado', data: resolved};
         console.log(response)
         return response
     } catch (error) {

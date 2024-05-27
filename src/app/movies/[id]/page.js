@@ -15,11 +15,6 @@ export default function MovieIdPage() {
     <> 
     {isClient ?
     <main className="flex min-h-screen flex-col items-center justify-between bg-white">
-
-     {/* <ReactPlayer 
-      url='https://www.youtube.com/watch?v=_w4sPyiNdBY'
-      controls
-     />  */}
      <MovieDetail/>
     </main>:null}</>
   )
