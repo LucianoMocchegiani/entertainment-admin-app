@@ -47,7 +47,6 @@ export const getPremieres=  async (
     }
 }
 
-
 export const searchSeriesAlgolia = async (search) =>{
     let response
     try {
@@ -114,7 +113,66 @@ export const getSerieDetailFirebase=  async (id)=>{
         return response
     }
 }
-
+export const getSeriesLite=  async (
+    options = {
+        requestType:'generic', 
+        value:null,
+        value2:null,
+        scroll:false, 
+        setState:(e)=>console.log(e), 
+        prevState:[],
+    })=>
+    {
+    //firebase
+    let response
+    try {
+        const{
+            requestType, 
+            value,
+            value2,
+            scroll, 
+            setState, 
+            prevState,
+        }= options
+        if(requestType!=='generic'&&requestType!=='where'&&requestType!=='whereArray'&&requestType!=='whereArrayWhere'){
+            response = { success:false, message:'Error de requestTypes en getSeries' };
+            console.log(response)
+            return response
+        }else if(requestType==='whereArrayWhere'&& (!value ||!value2)){
+            response = { success:false, message:'Error de requestTypes en getSeries, faltan valores' };
+            console.log(response)
+            return response
+        }else if(requestType!=='generic'){
+            response = { success:false, message:'Error de requestTypes en getSeries, faltan valores' };
+            console.log(response)
+            return response
+        }
+        const selectedCollection = collection(db, `series_faces`);
+        const requestTypes = !scroll?{
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(24))),
+            where:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21),where('category_id','==',value))),
+            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21),where('discount_codes', "array-contains", value))),
+            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),limit(21),where('category_id','==',value),where('discount_codes', "array-contains", value2)))
+        }:{
+            generic:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),startAfter(prevState[prevState.length-1].name),limit(12))),
+            where:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('category_id','==',value),startAfter(prevState[prevState.length-1].name),limit(12))),
+            whereArray:async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('discount_codes', "array-contains", value),startAfter(prevState[prevState.length-1].name),limit(12))),
+            whereArrayWhere: async ()=> await getDocs(query(selectedCollection, orderBy("name",'asc'),where('category_id','==',value),where('discount_codes', "array-contains", value2),startAfter(prevState[prevState.length-1].name),limit(12)))
+        }
+        const requestSnapshot = await requestTypes[requestType]()
+        const requestData = requestSnapshot.docs.map((serie) => ({
+          ...serie.data(),   
+          id:serie.id,
+        }));
+        response = { success:true, message:'Series obtenidas', data: [...prevState,...requestData]};
+        setState([...prevState,...requestData])
+        console.log(response)
+        return ([...prevState,...requestData])
+    } catch (error) {
+        let response = { success:false, message:error.message };
+        console.log(response)
+    }
+}
 export const getSeries=  async (
     options = {
         requestType:'generic', 
@@ -180,11 +238,23 @@ export const postSerie=  async (data)=>{
     //Firebase
     try { 
         let response = { success:false, message:'Reintente nuevamente en unos momentos' };
-        const {id} = data
+        const {id, poster_path, name, label, platform, genres, status, first_air_date} = data
         data = {...data , updated_date:Timestamp.now(), created_date:Timestamp.now()}
+        const dataLite = {
+            id: id ,
+            poster_path: poster_path,
+            name: name,
+            label: label, 
+            platform: platform,
+            genres: genres,
+            status: status,
+            first_air_date: first_air_date
+        }
         const selectedDoc = doc(db, `series/${id}`);
+        const selectedDocLite = doc(db, `series_faces/${id}`);
         const resolved = await setDoc(selectedDoc, data)
-        response = { success:true, message:'Serie cargada a firebase', data: resolved};
+        const resolvedLite = await setDoc(selectedDocLite, dataLite)
+        response = { success:true, message:'Serie cargada a firebase', data: resolved, dataLite: resolvedLite};
         console.log(response)
         return response
     } catch (error) {
@@ -199,8 +269,10 @@ export const DeleteSerie=  async (id)=>{
     try { 
         let response = { success:false, message:'Reintente nuevamente en unos momentos' };
         const selectedDoc = doc(db, `series/${id}`);
+        const selectedDocLite = doc(db, `series_faces/${id}`);
         const resolved = await deleteDoc(selectedDoc)
-        response = { success:true, message:'Serie eliminada de firebase', data: resolved};
+        const resolvedLite = await deleteDoc(selectedDocLite)
+        response = { success:true, message:'Serie eliminada de firebase', data: resolved, dataLite: resolvedLite };
         console.log(response)
         return response
     } catch (error) {

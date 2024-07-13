@@ -1,3 +1,4 @@
+"use client"
 import Series from '@/components/series/Series'
 import SearchSeries from '@/components/series/SearchSeries'
 import { Suspense } from 'react'

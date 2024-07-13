@@ -4,9 +4,8 @@ import io from 'socket.io-client';
 import { putMovie } from '@/firebase/api/movies';
 import { putEpisode } from '@/firebase/api/episodes'
 
-const socket = io(process.env.NEXT_PUBLIC_SERVER_URL);
-
 export function ProgressBar({ id, file, setActive, serverpatch, movieData=null, serieData=null}) {
+  const socket = io(process.env.NEXT_PUBLIC_SERVER_URL);
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -149,11 +148,11 @@ export function ProgressBar({ id, file, setActive, serverpatch, movieData=null, 
          <p className='text-lg text-black mb-2'>Progreso de subida</p>
          <p className='text-lg text-black mb-2'>{file?.name}</p>
          <div className="w-full bg-gray-200 rounded-full h-auto dark:bg-gray-700">
-             <div>{progress}</div>
-             <div className={`bg-blue-600 h-2.5 rounded-full w-${Number(progress)}`}></div>
+            <div>{progress}</div>
+            <div style={{width:Number(progress)}} className={`bg-blue-600 h-2.5 rounded-full`}></div>
          </div>
          <div className='flex flex-row mt-2'>
-             <button className='border-none text-white bg-black rounded p-2 ml-6' onClick={handleCancel}>Cancelar</button>
+            <button className='border-none text-white bg-black rounded p-2 ml-6' onClick={handleCancel}>Cancelar</button>
          </div>      
      </div>
     </div>
