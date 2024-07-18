@@ -12,6 +12,8 @@ export function ProgressBar({ id, file, setActive, serverpatch, movieData = null
   const xhrRef = useRef(null);
 
   useEffect(() => {
+    console.log(serverpatch)
+    console.log(process.env.NEXT_PUBLIC_SERVER_URL)
     socket.current = io(process.env.NEXT_PUBLIC_SERVER_URL);
 
     socket.current.on('uploadProgress', (data) => {
