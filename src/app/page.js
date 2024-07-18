@@ -15,7 +15,7 @@ export default function App() {
     <main className="flex min-h-screen flex-col items-center justify-between bg-white">
       <ReactPlayer
           className='react-player'
-          url='https://172.16.38.68//videos/movies/512195.mp4'
+          url='https://172.16.38.68//videos/movies/584.mp4'
           width='80%'
           height='80%'
           controls={true}
